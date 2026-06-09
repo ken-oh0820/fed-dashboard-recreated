@@ -465,6 +465,7 @@ tr.hi td { background: rgba(91, 123, 139, 0.15); font-weight: 700; }
       <div class="hd-btns">
         <label class="pdf-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>PDF<input type="file" id="pdfInput" accept="*/*" multiple></label>
         <button class="paste-btn" onclick="pasteFromClipboard()" title="텍스트 붙여넣기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>붙여넣기</button>
+        <button class="paste-btn" onclick="loadDemoData()" title="샘플 데이터">샘플</button>
         <button class="btn" onclick="openModal('historyModal')" title="저장된 데이터"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></button>
         <button class="btn" onclick="toggleTheme()" title="테마 변경"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
         <button class="btn" onclick="openModal('settingsModal')" title="설정"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
@@ -484,9 +485,10 @@ tr.hi td { background: rgba(91, 123, 139, 0.15); font-weight: 700; }
     <div class="upload-btns">
       <label class="upload-btn" for="pdfInputInitial">파일 선택</label>
       <button type="button" class="upload-btn upload-btn-alt" onclick="pasteFromClipboard()">텍스트 붙여넣기</button>
+      <button type="button" class="upload-btn upload-btn-alt" onclick="loadDemoData()">샘플 데이터</button>
     </div>
     <p class="dropzone-hint">또는 이 영역에 파일을 드래그하세요</p>
-    <p><a href="https://www.federalreserve.gov/releases/h41/" target="_blank">연준 H.4.1 PDF 다운로드 →</a></p>
+    <p><a href="https://www.federalreserve.gov/releases/h41/" target="_blank" rel="noopener">연준 H.4.1 PDF 다운로드 →</a></p>
     <input type="file" id="pdfInputInitial" accept="*/*" multiple>
   </div>
 
@@ -516,7 +518,7 @@ tr.hi td { background: rgba(91, 123, 139, 0.15); font-weight: 700; }
 <footer class="app-footer">
   <span>V3</span>
   <span class="sep">·</span>
-  <a href="https://www.threads.net/@ecoseeksmango" target="_blank">@ecoseeksmango</a>
+  <a href="https://www.threads.net/@ecoseeksmango" target="_blank" rel="noopener">@ecoseeksmango</a>
 </footer>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
@@ -594,7 +596,7 @@ tr.hi td { background: rgba(91, 123, 139, 0.15); font-weight: 700; }
       <div class="setting-group">
         <label>정보</label>
         <div class="setting-row">
-          <a href="https://drive.google.com/open?id=1zOcYt34r2VGhV-eJhVQTHINgV1aCp0eO&usp=drive_fs" target="_blank" class="setting-btn update-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9"/></svg>업데이트 확인</a>
+          <a href="https://drive.google.com/open?id=1zOcYt34r2VGhV-eJhVQTHINgV1aCp0eO&usp=drive_fs" target="_blank" rel="noopener" class="setting-btn update-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9"/></svg>업데이트 확인</a>
         </div>
       </div>
     </div>
@@ -614,7 +616,8 @@ try {
   console.log('PDF.js 로드 실패');
 }
 
-var API_BASE = '';
+var DATA_STORE_KEY = 'fedDashboard.savedData.v1';
+var SETTINGS_STORE_KEY = 'fedDashboard.settings.v1';
 var currentData = null;
 var savedDataList = [];
 var chartPeriod = '3m';
@@ -677,15 +680,19 @@ async function pasteFromClipboard() {
 
 async function saveDataToServer() {
   try {
-    await fetch(API_BASE + '/api/data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(savedDataList) });
+    localStorage.setItem(DATA_STORE_KEY, JSON.stringify(savedDataList));
     updateStatus('저장됨');
-  } catch (e) { console.error('Save error:', e); }
+  } catch (e) {
+    console.error('Save error:', e);
+    updateStatus('저장 실패');
+    showToast('브라우저 저장소에 저장하지 못했습니다', true);
+  }
 }
 
 async function loadDataFromServer() {
   try {
-    var res = await fetch(API_BASE + '/api/data');
-    var data = await res.json();
+    var raw = localStorage.getItem(DATA_STORE_KEY);
+    var data = raw ? JSON.parse(raw) : [];
     if (Array.isArray(data) && data.length > 0) {
       savedDataList = data;
       currentDataIndex = 0;
@@ -696,20 +703,32 @@ async function loadDataFromServer() {
       document.getElementById('overview').classList.add('active');
       updateNavButtons();
     }
-  } catch (e) { console.error('Load error:', e); }
+  } catch (e) {
+    console.error('Load error:', e);
+    showToast('저장된 데이터를 불러오지 못했습니다', true);
+  }
 }
 
 async function saveSettingsToServer() {
-  try { await fetch(API_BASE + '/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); } catch (e) { console.error('Settings save error:', e); }
+  try {
+    localStorage.setItem(SETTINGS_STORE_KEY, JSON.stringify(settings));
+  } catch (e) {
+    console.error('Settings save error:', e);
+    showToast('설정을 저장하지 못했습니다', true);
+  }
 }
 
 async function loadSettingsFromServer() {
   try {
-    var res = await fetch(API_BASE + '/api/settings');
-    var data = await res.json();
+    var raw = localStorage.getItem(SETTINGS_STORE_KEY);
+    var data = raw ? JSON.parse(raw) : null;
     if (data && Object.keys(data).length > 0) settings = Object.assign({}, defaultSettings, data);
     applySettings();
-  } catch (e) { console.error('Settings load error:', e); }
+  } catch (e) {
+    console.error('Settings load error:', e);
+    settings = Object.assign({}, defaultSettings);
+    applySettings();
+  }
 }
 
 function updateStatus(text) {
@@ -1491,6 +1510,54 @@ function renderCharts() {
 }
 
 function setPeriod(p) { chartPeriod = p; renderCharts(); }
+
+function buildDemoH41Text(releaseDate, asOfDate, totalAssets, securities, reserves, tga, rrp, assetWeekly, reservesWeekly, tgaWeekly, rrpWeekly) {
+  return `Federal Reserve Statistical Release H.4.1
+${releaseDate}
+Week ended ${asOfDate}
+Reserve Bank credit ${totalAssets - 420000} ${assetWeekly >= 0 ? '+' : '-'} ${Math.abs(assetWeekly)} - 360,000
+Securities held outright ${securities} - 19,500 - 790,000
+U.S. Treasury securities 4,310,000 - 10,400 - 480,000
+Bills 192,000 - 1,400 - 64,000
+Notes and bonds, nominal 3,611,000 - 7,200 - 350,000
+Notes and bonds, inflation-indexed 507,000 - 1,800 - 66,000
+Mortgage-backed securities 2,170,000 - 9,100 - 305,000
+Repurchase agreements 0 + 0 + 0
+Loans 82,000 - 2,400 - 52,000
+Primary credit 2,100 - 300 - 1,800
+Bank Term Funding Program 0 + 0 - 121,000
+Central bank liquidity swaps 140 + 20 - 60
+Gold stock 11,041 + 0 + 0
+Special drawing rights 5,200 + 0 + 0
+Total factors supplying ${totalAssets} ${assetWeekly >= 0 ? '+' : '-'} ${Math.abs(assetWeekly)} - 360,000
+Currency in circulation 2,360,000 + 4,800 + 84,000
+Reverse repurchase agreements ${rrp} ${rrpWeekly >= 0 ? '+' : '-'} ${Math.abs(rrpWeekly)} - 790,000
+Foreign official 380,000 - 8,500 - 70,000
+Deposits with F.R. Banks 4,020,000 + 9,000 + 30,000
+U.S. Treasury, General Account ${tga} ${tgaWeekly >= 0 ? '+' : '-'} ${Math.abs(tgaWeekly)} - 150,000
+Other deposits 170,000 - 1,200 + 35,000
+Total factors absorbing ${totalAssets - reserves} ${assetWeekly - reservesWeekly >= 0 ? '+' : '-'} ${Math.abs(assetWeekly - reservesWeekly)} - 405,000
+Reserve balances with Federal Reserve ${reserves} ${reservesWeekly >= 0 ? '+' : '-'} ${Math.abs(reservesWeekly)} + 45,000
+Total assets ${totalAssets} ${assetWeekly >= 0 ? '+' : '-'} ${Math.abs(assetWeekly)} - 360,000
+Total liabilities ${totalAssets - 39000} ${assetWeekly >= 0 ? '+' : '-'} ${Math.abs(assetWeekly)} - 350,000`;
+}
+
+function loadDemoData() {
+  var demoTexts = [
+    buildDemoH41Text('June 4, 2026', 'May 28, 2026', 6720000, 6480000, 3190000, 660000, 2145000, -21300, 11000, -34000, -15000),
+    buildDemoH41Text('May 28, 2026', 'May 21, 2026', 6741300, 6501000, 3179000, 694000, 2160000, -18500, 18000, -26000, -22000),
+    buildDemoH41Text('April 30, 2026', 'April 23, 2026', 6810000, 6560000, 3096000, 742000, 2210000, -19700, 26000, 42000, -18000)
+  ];
+  demoTexts.forEach(function(text, idx) { parseH41Text(text, idx < demoTexts.length - 1); });
+  currentDataIndex = 0;
+  currentData = savedDataList[0];
+  saveDataToServer();
+  renderAll();
+  document.getElementById('dropzoneInitial').style.display = 'none';
+  document.getElementById('tabsContainer').style.display = 'flex';
+  updateNavButtons();
+  showToast('샘플 데이터 3개를 불러왔습니다');
+}
 
 async function init() { 
   applySettings(); // 기본 설정 먼저 적용
