@@ -959,13 +959,21 @@ async function processSinglePDF(file) {
 }
 
 function parseH41Text(text, skipRender = false) {
-  var extractWithChanges = (label) => {
+  var getMainFactorsText = () => {
+    var start = text.search(/Reserve Bank credit/i);
+    if (start < 0) return text;
+    var section = text.slice(start);
+    var end = section.search(/(?:1A\.\s*)?Memorandum Items|Securities held in custody for foreign official|2\.\s*Maturity Distribution/i);
+    return end > 0 ? section.slice(0, end) : section;
+  };
+  var mainFactorsText = getMainFactorsText();
+  var extractWithChanges = (label, sourceText = text) => {
     var patterns = [
       new RegExp(label + '[\\s\\S]{0,50}?([\\d,]+)\\s*([+-])\\s*([\\d,]+)\\s*([+-])\\s*([\\d,]+)', 'i'),
       new RegExp(label + '[^\\d]*?([\\d,]+)[^\\d]*?([+-])?\\s*([\\d,]+)?[^\\d]*?([+-])?\\s*([\\d,]+)?', 'i')
     ];
     for (var p of patterns) {
-      var m = text.match(p);
+      var m = sourceText.match(p);
       if (m && m[1]) {
         var v = parseInt(m[1].replace(/,/g, '')) || 0;
         var w = parseInt((m[3] || '0').replace(/,/g, '')) || 0;
@@ -977,6 +985,11 @@ function parseH41Text(text, skipRender = false) {
     }
     return { v: 0, w: 0, y: 0 };
   };
+  var extractMainFactor = (label) => extractWithChanges(label, mainFactorsText);
+  var extractMbsOutright = () => {
+    var sanitized = mainFactorsText.replace(/Federal agency debt\s+(?:and|&)\s+mortgage-backed securities/gi, 'Federal agency debt custody securities');
+    return extractWithChanges('Mortgage-backed securities', sanitized);
+  };
 
   var dateMatch = text.match(/(?:December|January|February|March|April|May|June|July|August|September|October|November)\s+\d{1,2},?\s*\d{4}/i);
   var weekMatch = text.match(/Week\s+ended\s+(\w+\s+\d{1,2},?\s*\d{4})/i);
@@ -985,30 +998,30 @@ function parseH41Text(text, skipRender = false) {
     releaseDate: dateMatch ? dateMatch[0] : 'Unknown',
     asOfDate: weekMatch ? weekMatch[1] : (dateMatch ? dateMatch[0] : 'Unknown'),
     timestamp: new Date().toISOString(),
-    reserveBankCredit: extractWithChanges('Reserve Bank credit'),
-    securitiesHeld: extractWithChanges('Securities held outright'),
-    treasurySecurities: extractWithChanges('U\\.?S\\.? Treasury securities'),
-    bills: extractWithChanges('Bills'),
-    notesAndBonds: extractWithChanges('Notes and bonds, nominal'),
-    tips: extractWithChanges('Notes and bonds, inflation-indexed'),
-    mbs: extractWithChanges('Mortgage-backed securities'),
-    repos: extractWithChanges('Repurchase agreements'),
-    loans: extractWithChanges('Loans'),
-    primaryCredit: extractWithChanges('Primary credit'),
-    btfp: extractWithChanges('Bank Term Funding Program'),
-    swaps: extractWithChanges('Central bank liquidity swaps'),
-    otherAssets: extractWithChanges('Other assets'),
-    gold: extractWithChanges('Gold stock'),
-    sdr: extractWithChanges('Special drawing rights'),
-    treasuryCurrency: extractWithChanges('Treasury currency outstanding'),
-    totalSupplying: extractWithChanges('Total factors supplying'),
-    currency: extractWithChanges('Currency in circulation'),
-    rrp: extractWithChanges('Reverse repurchase agreements'),
-    foreignRrp: extractWithChanges('Foreign official'),
-    deposits: extractWithChanges('Deposits with F\\.?R\\.? Banks'),
-    tga: extractWithChanges('U\\.?S\\.? Treasury,? General Account'),
-    otherDeposits: extractWithChanges('Other deposits'),
-    totalAbsorbing: extractWithChanges('Total factors.*absorbing'),
+    reserveBankCredit: extractMainFactor('Reserve Bank credit'),
+    securitiesHeld: extractMainFactor('Securities held outright'),
+    treasurySecurities: extractMainFactor('U\\.?S\\.? Treasury securities'),
+    bills: extractMainFactor('Bills'),
+    notesAndBonds: extractMainFactor('Notes and bonds, nominal'),
+    tips: extractMainFactor('Notes and bonds, inflation-indexed'),
+    mbs: extractMbsOutright(),
+    repos: extractMainFactor('Repurchase agreements'),
+    loans: extractMainFactor('Loans'),
+    primaryCredit: extractMainFactor('Primary credit'),
+    btfp: extractMainFactor('Bank Term Funding Program'),
+    swaps: extractMainFactor('Central bank liquidity swaps'),
+    otherAssets: extractMainFactor('Other assets'),
+    gold: extractMainFactor('Gold stock'),
+    sdr: extractMainFactor('Special drawing rights'),
+    treasuryCurrency: extractMainFactor('Treasury currency outstanding'),
+    totalSupplying: extractMainFactor('Total factors supplying'),
+    currency: extractMainFactor('Currency in circulation'),
+    rrp: extractMainFactor('Reverse repurchase agreements'),
+    foreignRrp: extractMainFactor('Foreign official'),
+    deposits: extractMainFactor('Deposits with F\\.?R\\.? Banks'),
+    tga: extractMainFactor('U\\.?S\\.? Treasury,? General Account'),
+    otherDeposits: extractMainFactor('Other deposits'),
+    totalAbsorbing: extractMainFactor('Total factors.*absorbing'),
     reserves: extractWithChanges('Reserve balances with Federal Reserve'),
     totalAssets: extractWithChanges('Total assets'),
     totalLiabilities: extractWithChanges('Total liabilities'),
