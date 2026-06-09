@@ -482,6 +482,7 @@ tr.hi td { background: rgba(91, 123, 139, 0.15); font-weight: 700; }
     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--accent);margin-bottom:16px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
     <h2>H.4.1 PDF 파일 업로드</h2>
     <p>여러 파일을 한번에 올려서 시계열 데이터를 쌓을 수 있습니다</p>
+    <p id="savedDataHint" class="dropzone-hint" style="display:none"></p>
     <div class="upload-btns">
       <label class="upload-btn" for="pdfInputInitial">파일 선택</label>
       <button type="button" class="upload-btn upload-btn-alt" onclick="pasteFromClipboard()">텍스트 붙여넣기</button>
@@ -696,11 +697,13 @@ async function loadDataFromServer() {
     if (Array.isArray(data) && data.length > 0) {
       savedDataList = data;
       currentDataIndex = 0;
-      currentData = savedDataList[0];
-      renderAll();
-      document.getElementById('dropzoneInitial').style.display = 'none';
-      document.getElementById('tabsContainer').style.display = 'flex';
-      document.getElementById('overview').classList.add('active');
+      currentData = null;
+      var hint = document.getElementById('savedDataHint');
+      if (hint) {
+        hint.style.display = 'block';
+        hint.textContent = '저장된 데이터 ' + savedDataList.length + '개가 있습니다. 상단 저장 데이터 버튼에서 불러오세요.';
+      }
+      updateStatus('저장 데이터 ' + savedDataList.length + '개');
       updateNavButtons();
     }
   } catch (e) {
@@ -1212,6 +1215,22 @@ function closeAllModals() {
   document.getElementById('modalOverlay').classList.remove('open');
 }
 
+function resetDashboardView() {
+  currentData = null;
+  currentDataIndex = 0;
+  document.getElementById('releaseDate').textContent = '-';
+  document.getElementById('asOfDate').textContent = '-';
+  document.getElementById('dropzoneInitial').style.display = 'block';
+  document.getElementById('tabsContainer').style.display = 'none';
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.remove('active');
+    c.innerHTML = '';
+  });
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+  document.getElementById('overview').classList.add('active');
+  updateNavButtons();
+}
+
 function parseDate(str) {
   var months = {January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11};
   var m = str.match(/(\w+)\s+(\d+),?\s*(\d{4})/);
@@ -1230,13 +1249,16 @@ function renderSavedList() {
 function deleteAllData() {
   if (!confirm('저장된 모든 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) return;
   savedDataList = [];
-  currentData = {};
+  localStorage.removeItem(DATA_STORE_KEY);
   currentDataIndex = 0;
-  saveDataToServer();
+  currentData = null;
+  var hint = document.getElementById('savedDataHint');
+  if (hint) {
+    hint.style.display = 'none';
+    hint.textContent = '';
+  }
   renderSavedList();
-  document.getElementById('dropzoneInitial').style.display = 'block';
-  document.getElementById('tabsContainer').style.display = 'none';
-  updateNavButtons();
+  resetDashboardView();
   closeModal('historyModal');
   showToast('✅ 모든 데이터가 삭제되었습니다');
 }
@@ -1254,7 +1276,7 @@ function navData(dir) {
 
 function updateNavButtons() {
   var navArrows = document.getElementById('navArrows');
-  if (savedDataList.length > 1) {
+  if (currentData && savedDataList.length > 1) {
     navArrows.style.display = 'flex';
     document.getElementById('navPrev').disabled = currentDataIndex === 0;
     document.getElementById('navNext').disabled = currentDataIndex === savedDataList.length - 1;
@@ -1276,7 +1298,22 @@ function loadSaved(i) {
 function deleteSaved(i) {
   if (!confirm('삭제할까요?')) return;
   savedDataList.splice(i, 1);
-  saveDataToServer();
+  if (savedDataList.length) {
+    saveDataToServer();
+    var hint = document.getElementById('savedDataHint');
+    if (hint) {
+      hint.style.display = 'block';
+      hint.textContent = '저장된 데이터 ' + savedDataList.length + '개가 있습니다. 상단 저장 데이터 버튼에서 불러오세요.';
+    }
+  } else {
+    localStorage.removeItem(DATA_STORE_KEY);
+    var emptyHint = document.getElementById('savedDataHint');
+    if (emptyHint) {
+      emptyHint.style.display = 'none';
+      emptyHint.textContent = '';
+    }
+    resetDashboardView();
+  }
   renderSavedList();
   showToast('🗑️ 삭제됨');
 }
